@@ -1,7 +1,6 @@
 This directory contains a series a text files for tax brackets at the federal level and for all state levels.
-
-The database file should be named [state][year].txt or Federal[year].txt. The first letter should always be capitalized.
-
+The database file should be named [state][year].txt or federal[year].txt.
+The [state] entry should be the USPS acronym.
 The format of the federal file (for single filers) is as follows, and the state files must follow the same format:
 
 for all brackets
@@ -12,7 +11,7 @@ Single, federal
 numBrackets
 0	9525	0.10
 ...	...	...
-500000		0.37
+500001		0.37
 
 Each file should contain the rates for the different filing statuses available. They should be in the following order:
 
