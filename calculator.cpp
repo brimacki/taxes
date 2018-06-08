@@ -86,11 +86,12 @@ int main(){
 		cout << "You have failed to enter the correct family status identifier. Exiting now..." << endl;
 	}
 
-	//Determine tax brackets
+	//Input federal tax brackets
 	ifstream federalBrackets;
 	federalBrackets.open("taxBrackets/federal2018.txt");
 	if(!federalBrackets.is_open()){
-		cout << "Could not open bracket definitions! Exiting now..." << endl;
+		cout << "Could not open bracket definitions! Check that the 'taxBrackets/federal2018.txt' file exists. Exiting now..." << endl;
+		exit(-1);
 	}
 
 	int numBrackets;
@@ -120,7 +121,9 @@ int main(){
 			}
 		}
 	}
+	federalBrackets.close();
 
+	//Determine federal tax brackets
 	int index;
 	for(int i = 0; i < maximum.size(); ++i){
 		if(maximum.at(i) > federalTaxable){
@@ -131,12 +134,65 @@ int main(){
 
 	cout << "This is your marginal tax percentage: " << percentage.at(index)*100.0 << "%" << endl;
 
+	//Determine taxes owed
 	double federalIncomeTax = 0.0;
 	for(int i = 0; i < index; ++i){
 		federalIncomeTax += percentage.at(i)*(maximum.at(i) - minimum.at(i));
 	}
 	federalIncomeTax += percentage.at(index)*(federalTaxable - minimum.at(index));
 	cout << "This is your federal income tax: $" << federalIncomeTax << endl;
+
+	//Input state tax brackets
+	minimum.clear(), maximum.clear(), percentage.clear();
+	cout << "Enter the two character acronym for your state. For example, if you live in Illinois enter 'IL'." << endl;
+	char state[2];
+	cin >> state;
+	char filename[50];
+	sprintf(filename, "taxbrackets/%s2018.txt", state);
+
+	ifstream stateBrackets;
+	stateBrackets.open(filename);
+	if(!stateBrackets.is_open()){
+		cout << "Could not open bracket definitions! Check that the 'taxBrackets/[state]2018.txt' file exists. Exiting now..." << endl;
+		exit(-1);
+	}
+	
+	for(int i = 0; i < familyID + 1; ++i){
+		if(i == familyID){
+			stateBrackets >> numBrackets;
+			for(int j = 0; j < numBrackets; ++j){
+				stateBrackets >> value;
+				minimum.push_back(value);
+				if(j < numBrackets - 1){
+					stateBrackets >> value;
+					maximum.push_back(value);
+				}
+				stateBrackets >> value;
+				percentage.push_back(value);					
+			}
+		}
+		else{
+			stateBrackets >> numBrackets;
+			int numLoops = numBrackets*3;
+			for(int j = 0; j < numLoops - 1; ++j){
+				stateBrackets >> value;
+			}
+		}
+	}
+	stateBrackets.close();
+	for(int i = 0; i < maximum.size(); ++i){
+		cout << "maximum.at(i) = " << maximum.at(i) << endl;
+	}
+
+	//Determine state tax brackets
+	for(int i = 0; i < maximum.size(); ++i){
+		if(maximum.at(i) > federalTaxable){
+			index = i;
+			break;
+		}
+	}
+
+	cout << "This is your marginal tax percentage: " << percentage.at(index)*100.0 << "%" << endl;	
 
 	return 0;
 }
