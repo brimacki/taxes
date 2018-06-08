@@ -63,20 +63,22 @@ int main(){
 	cin >> familyType;
 	int familyID = -1;
 	if(familyType == "Single"){
-		familyID = 1;
+		familyID = 0;
 	}
 	else if(familyType == "MFS"){
-		familyID = 2;
+		familyID = 1;
 	}
 	else if(familyType == "MFJ"){
-		familyID = 3;
+		familyID = 2;
 	}
 	else if(familyType == "HoH"){
-		familyID = 4;
+		familyID = 3;
 	}
 	else{
 		cout << "You have failed to enter the correct family status identifier. Exiting now..." << endl;
 	}
+
+	cout << "familyID: " << familyID << endl;
 
 	ifstream federalBrackets;
 	federalBrackets.open("taxBrackets/federal2018.txt");
@@ -85,11 +87,22 @@ int main(){
 	}
 
 	int numBrackets;
-	for(int i = 0; i < familyID; ++i){
+	vector<double> minimum;
+	vector<double> maximum;
+	vector<double> percentage;
+	for(int i = 0; i < familyID + 1; ++i){
 		if(i == familyID){
 			federalBrackets >> numBrackets;
+			for(int j = 0; j < numBrackets; ++j){
+				for(int k = 0; k < 3; ++k){
+				}
+			}
 		}
 		else{
+			federalBrackets >> numBrackets;
+			int numLoops = numBrackets*3;
+			for(int j = 0; j < numBrackets*3; ++j){
+			}
 		}
 	}
 
