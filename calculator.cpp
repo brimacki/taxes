@@ -13,91 +13,80 @@ double maximumIncome = 1.0e9;
 
 using namespace std;
 
+double flatStateTax(double grossIncome);
+double federalTax(double federalTaxable, int familyID);
+int getFamilyType();
+
 int main(){
 
+	//Gross income
 	cout << "What is your gross earned income to the nearest cent?" << endl;
 	double grossIncome;
 	cin >> grossIncome;
-	//cout << "This is your gross income: $" << grossIncome << endl;
 
-	//The following is a cool function to write eventually.
-	/*int billions = grossIncome/1.0e9;
-	if(billions > 0){
-		cout << billions << ",";
-	}
-	int millions = (grossIncome - billions*1.0e9)/1.0e6;
-	if(millions > 0){
-		cout << millions << ",";
-	}
-	int thousands = (grossIncome - billions*1.0e9 - millions*1.0e6)/1.0e3;
-	if(thousands > 0){
-		cout << thousands << ",";
-	}
-	int ones = (grossIncome - billions*1.0e9 - millions*1.0e6 - thousands*1.0e3)/1.0e0;
-	if(ones > 0){
-		cout << ones << ".";
-	}
-	double cents = (grossIncome - billions*1.0e9 - millions*1.0e6 - thousands*1.0e3 - ones)*100;
-	if(cents > 0){
-		cout << cents << "." << endl;
-	}*/
-
+	//Regressive taxes
 	double medicareTaxes = medicareRate*grossIncome;
-	cout << "These are your medicare taxes: $" << medicareTaxes << endl;
+	double socialSecurityTaxes = socialSecurityRate*grossIncome;
 
-	double socialSecurityTaxes = socialSecurityRate*grossIncome;	
-	cout << "These are your social security taxes: $" << socialSecurityTaxes << endl;
-
+	//Filing status
 	double federalTaxable = grossIncome - personalExemption - standardDeduction;
-	if(federalTaxable < 0){
-		federalTaxable = 0;
-		cout << "You owe no taxes this year because your deductions and exemptions exceed your earned income." << endl;
-		exit(-1);
-	}
-	cout << "This is your federal taxable income: $" << federalTaxable << endl;
+	int familyID = getFamilyType();
 
-	//Determine family status
-	vector <string> familyTypes(4);
-	familyTypes.at(0) = "Single";
-	familyTypes.at(1) = "MFS";
-	familyTypes.at(2) = "MFJ";
-	familyTypes.at(3) = "HoH";
-	cout << "Under what family classification are you filing? You must enter (case sensitive): 'Single', 'MFS', 'MFJ', or 'HoH'." << endl;
+	//Progressive taxes
+	double federalTaxes = federalTax(federalTaxable, familyID);
+	double stateTaxes = flatStateTax(grossIncome);
+
+	//Reporting
+	cout << "This is your gross income: $" << grossIncome << endl;
+	cout << "These are your medicare taxes: $" << medicareTaxes << endl;
+	cout << "These are your social security taxes: $" << socialSecurityTaxes << endl;
+	cout << "This is your federal taxable income: $" << federalTaxable << endl;
+	cout << "This is your household's federal income tax: $" << federalTaxes << endl;
+	cout << "This is your household's state income tax: $" << stateTaxes << endl;
+	cout << "These are the total taxes you will pay: $" << medicareTaxes+socialSecurityTaxes+federalTaxes+stateTaxes << endl;
+	cout << "... and as a percentage of your gross income: " << (medicareTaxes+socialSecurityTaxes+federalTaxes+stateTaxes)/grossIncome*100.0 << "%" << endl;
+
+	return 0;
+}
+
+int getFamilyType(){
+	vector <string> familyTypes;
+	familyTypes.push_back("Single");
+	familyTypes.push_back("MFS");
+	familyTypes.push_back("MFJ");
+	familyTypes.push_back("HoH");
+
+	cout << "Under what family classification are you filing? You must enter (case sensitive): 'Single', 'MFJ', 'MFS', or 'HoH'." << endl;
 	string familyType;
 	cin >> familyType;
-	int familyID;
+	int status;
 	if(familyType == "Single"){
-		familyID = 0;
-		cout << "Your tax bracket will be determined based on the single marital status." << endl;
-	}
-	else if(familyType == "MFS"){
-		familyID = 1;
-		cout << "Your tax bracket will be determined based on the married filing separately status." << endl;
+		status = 0;
 	}
 	else if(familyType == "MFJ"){
-		familyID = 2;
-		cout << "Your tax bracket will be determined based on the married filing jointly status." << endl;
+		status = 1;
+	}
+	else if(familyType == "MFS"){
+		status = 2;
 	}
 	else if(familyType == "HoH"){
-		familyID = 3;
-		cout << "Your tax bracket will be determined based on the Head of Household status." << endl;
+		status = 3;
 	}
 	else{
 		cout << "You have failed to enter the correct family status identifier. Exiting now..." << endl;
 	}
+	return status;
+}
 
-	//Input federal tax brackets
+double federalTax(double income, int familyID){
 	ifstream federalBrackets;
 	federalBrackets.open("taxBrackets/federal2018.txt");
 	if(!federalBrackets.is_open()){
 		cout << "Could not open bracket definitions! Check that the 'taxBrackets/federal2018.txt' file exists. Exiting now..." << endl;
 		exit(-1);
 	}
-
 	int numBrackets;
-	vector<double> minimum;
-	vector<double> maximum;
-	vector<double> percentage;
+	vector<double> minimum, maximum, percentage;
 	double value;
 	for(int i = 0; i < familyID + 1; ++i){
 		if(i == familyID){
@@ -123,10 +112,9 @@ int main(){
 	}
 	federalBrackets.close();
 
-	//Determine federal tax brackets
 	int index;
 	for(int i = 0; i < maximum.size(); ++i){
-		if(maximum.at(i) > federalTaxable){
+		if(maximum.at(i) > income){
 			index = i;
 			break;
 		}
@@ -134,65 +122,32 @@ int main(){
 
 	cout << "This is your marginal tax percentage: " << percentage.at(index)*100.0 << "%" << endl;
 
-	//Determine taxes owed
 	double federalIncomeTax = 0.0;
 	for(int i = 0; i < index; ++i){
 		federalIncomeTax += percentage.at(i)*(maximum.at(i) - minimum.at(i));
 	}
-	federalIncomeTax += percentage.at(index)*(federalTaxable - minimum.at(index));
-	cout << "This is your federal income tax: $" << federalIncomeTax << endl;
+	federalIncomeTax += percentage.at(index)*(income - minimum.at(index));
 
-	//Input state tax brackets
-	minimum.clear(), maximum.clear(), percentage.clear();
+	return federalIncomeTax;
+}
+
+double flatStateTax(double income){
+	char state[2], filename[50];
+	double statePercentage, personalStateExemption;
+	int numExemptions;
 	cout << "Enter the two character acronym for your state. For example, if you live in Illinois enter 'IL'." << endl;
-	char state[2];
 	cin >> state;
-	char filename[50];
 	sprintf(filename, "taxbrackets/%s2018.txt", state);
-
-	ifstream stateBrackets;
-	stateBrackets.open(filename);
-	if(!stateBrackets.is_open()){
+	ifstream stateInfo;
+	stateInfo.open(filename);
+	if(!stateInfo.is_open()){
 		cout << "Could not open bracket definitions! Check that the 'taxBrackets/[state]2018.txt' file exists. Exiting now..." << endl;
 		exit(-1);
 	}
-	
-	for(int i = 0; i < familyID + 1; ++i){
-		if(i == familyID){
-			stateBrackets >> numBrackets;
-			for(int j = 0; j < numBrackets; ++j){
-				stateBrackets >> value;
-				minimum.push_back(value);
-				if(j < numBrackets - 1){
-					stateBrackets >> value;
-					maximum.push_back(value);
-				}
-				stateBrackets >> value;
-				percentage.push_back(value);					
-			}
-		}
-		else{
-			stateBrackets >> numBrackets;
-			int numLoops = numBrackets*3;
-			for(int j = 0; j < numLoops - 1; ++j){
-				stateBrackets >> value;
-			}
-		}
-	}
-	stateBrackets.close();
-	for(int i = 0; i < maximum.size(); ++i){
-		cout << "maximum.at(i) = " << maximum.at(i) << endl;
-	}
-
-	//Determine state tax brackets
-	for(int i = 0; i < maximum.size(); ++i){
-		if(maximum.at(i) > federalTaxable){
-			index = i;
-			break;
-		}
-	}
-
-	cout << "This is your marginal tax percentage: " << percentage.at(index)*100.0 << "%" << endl;	
-
-	return 0;
+	stateInfo >> personalStateExemption;
+	stateInfo >> statePercentage;
+	stateInfo.close();
+	cout << "How many personal state exemptions will you claim?" << endl;
+	cin >>  numExemptions;
+	return statePercentage*(income - numExemptions*personalStateExemption);
 }
