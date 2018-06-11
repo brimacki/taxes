@@ -24,12 +24,17 @@ int main(){
 	double grossIncome;
 	cin >> grossIncome;
 
+	//Other deductions
+	cout << "How much are you contributing to a pre-tax retirement account?" << endl;
+	double retirementDeductions;
+	cin >> retirementDeductions;
+
 	//Regressive taxes
 	double medicareTaxes = medicareRate*grossIncome;
 	double socialSecurityTaxes = socialSecurityRate*grossIncome;
 
 	//Filing status
-	double federalTaxable = grossIncome - personalExemption - standardDeduction;
+	double federalTaxable = grossIncome - personalExemption - standardDeduction - retirementDeductions;
 	int familyID = getFamilyType();
 
 	//Progressive taxes
