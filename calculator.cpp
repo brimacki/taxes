@@ -13,9 +13,10 @@ double maximumIncome = 1.0e9;
 
 using namespace std;
 
-double flatStateTax(double grossIncome);
-double federalTax(double federalTaxable, int familyID);
 int getFamilyType();
+double federalTax(double federalTaxable, int familyID);
+double flatStateTax(double grossIncome);
+int reporting(double gross, double medicare, double socialSecurity, double federalIncome, double federal, double state);
 
 int main(){
 
@@ -41,15 +42,8 @@ int main(){
 	double federalTaxes = federalTax(federalTaxable, familyID);
 	double stateTaxes = flatStateTax(grossIncome);
 
-	//Reporting
-	cout << "This is your gross income: $" << grossIncome << endl;
-	cout << "These are your medicare taxes: $" << medicareTaxes << endl;
-	cout << "These are your social security taxes: $" << socialSecurityTaxes << endl;
-	cout << "This is your federal taxable income: $" << federalTaxable << endl;
-	cout << "This is your household's federal income tax: $" << federalTaxes << endl;
-	cout << "This is your household's state income tax: $" << stateTaxes << endl;
-	cout << "These are the total taxes you will pay: $" << medicareTaxes+socialSecurityTaxes+federalTaxes+stateTaxes << endl;
-	cout << "... and as a percentage of your gross income: " << (medicareTaxes+socialSecurityTaxes+federalTaxes+stateTaxes)/grossIncome*100.0 << "%" << endl;
+	//Report results
+	int status = reporting(grossIncome, medicareTaxes, socialSecurityTaxes, federalTaxable, federalTaxes, stateTaxes);
 
 	return 0;
 }
@@ -155,4 +149,20 @@ double flatStateTax(double income){
 	cout << "How many personal state exemptions will you claim?" << endl;
 	cin >>  numExemptions;
 	return statePercentage*(income - numExemptions*personalStateExemption);
+}
+
+int reporting(double gross, double medicare, double socialSecurity, double federalIncome, double federal, double state){
+
+	ofstream report("Tax Info.txt");
+	report << "This is your gross income: $" << gross << endl;
+	report << "These are your medicare taxes: $" << medicare << endl;
+	report << "These are your social security taxes: $" << socialSecurity << endl;
+	report << "This is your federal taxable income: $" << federalIncome << endl;
+	report << "This is your household's federal income tax: $" << federal << endl;
+	report << "This is your household's state income tax: $" << state << endl;
+	report << "These are the total taxes you will pay: $" << medicare + socialSecurity + federal + state << endl;
+	report << "... and as a percentage of your gross income: " << (medicare + socialSecurity + federal + state)/gross*100.0 << "%" << endl;
+	report.close();
+
+	return 0;
 }
