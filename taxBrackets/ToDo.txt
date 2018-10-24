@@ -1,7 +1,7 @@
-Alabama - AL
-Alaska - AK
-Arizona - AZ
-Arkansas - AR
+Alabama - AL -- done
+Alaska - AK -- done
+Arizona - AZ -- done
+Arkansas - AR -- done, almost
 California - CA -- done
 Colorado - CO
 Connecticut - CT
