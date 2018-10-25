@@ -1,5 +1,3 @@
-//Make a function to convert double to dollar amount
-
 #include<iostream>
 #include<cmath>
 #include<fstream>
