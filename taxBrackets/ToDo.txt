@@ -4,12 +4,12 @@ Arizona - AZ -- done
 Arkansas - AR -- done
 California - CA -- done
 Colorado - CO -- done
-Connecticut - CT
-Delaware - DE
-Florida - FL
-Georgia - GA
-Hawaii - HI
-Idaho - ID
+Connecticut - CT -- done
+Delaware - DE -- done
+Florida - FL -- done
+Georgia - GA -- done
+Hawaii - HI -- done
+Idaho - ID -- done
 Illinois - IL -- done
 Indiana - IN
 Iowa - IA
