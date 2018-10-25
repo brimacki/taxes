@@ -5,15 +5,16 @@ Arkansas - AR -- done
 California - CA -- done
 Colorado - CO -- done
 Connecticut - CT -- done
+Washington, D.C. - DC 
 Delaware - DE -- done
 Florida - FL -- done
 Georgia - GA -- done
 Hawaii - HI -- done
 Idaho - ID -- done
 Illinois - IL -- done
-Indiana - IN
-Iowa - IA
-Kansas - KS
+Indiana - IN -- done
+Iowa - IA -- done
+Kansas - KS -- done
 Kentucky - KY
 Louisiana - LA
 Maine - ME
