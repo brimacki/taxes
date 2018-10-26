@@ -42,8 +42,8 @@ South Carolina - SC -- done
 South Dakota - SD -- done
 Tennessee - TN -- done
 Texas - TX -- done
-Utah - UT
-Vermont - VT
+Utah - UT -- done
+Vermont - VT -- done
 Virginia - VA
 Washington - WA
 West Virginia - WV
