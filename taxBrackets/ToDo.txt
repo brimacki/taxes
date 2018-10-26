@@ -35,13 +35,13 @@ North Carolina - NC -- done
 North Dakota - ND -- done
 Ohio - OH -- done
 Oklahoma - OK -- done
-Oregon - OR
-Pennsylvania - PA
-Rhode Island - RI
-South Carolina - SC
-South Dakota - SD
-Tennessee - TN
-Texas - TX
+Oregon - OR -- done
+Pennsylvania - PA -- done
+Rhode Island - RI -- done
+South Carolina - SC -- done
+South Dakota - SD -- done
+Tennessee - TN -- done
+Texas - TX -- done
 Utah - UT
 Vermont - VT
 Virginia - VA
