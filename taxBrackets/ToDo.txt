@@ -44,8 +44,8 @@ Tennessee - TN -- done
 Texas - TX -- done
 Utah - UT -- done
 Vermont - VT -- done
-Virginia - VA
-Washington - WA
-West Virginia - WV
-Wisconsin - WI
-Wyoming - WY
+Virginia - VA -- done
+Washington - WA -- done
+West Virginia - WV -- done
+Wisconsin - WI -- done
+Wyoming - WY -- done
